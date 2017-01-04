@@ -40,7 +40,7 @@ bool dataserver::analyse_parameter(std::ifstream &in, std::map<std::string, std:
     thread_num = atoi(para["work_thread_num"].c_str());
 }
 
-bool dataserver::master_init(std::map<std::string, std::string>& para)//ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
+bool dataserver::master_init(std::map<std::string, std::string>& para)//Ö÷Òª¹¤×÷³õÊ¼»¯
 {
 	worker_item_aq = std::make_unique<std::vector<std::shared_ptr<hodis::lockList<Item>>>>(thread_num);
     worker_item_aq_condition = std::make_unique<std::vector<std::shared_ptr<std::atomic<bool>>>>(thread_num);
@@ -115,11 +115,11 @@ bool dataserver::work_init()
 		{
 			fprintf(stderr,"pipe fds error\n");
 		}
-		eventfds.push_back(fds[1]);//ï¿½ï¿½ï¿½ï¿½ï¿½ß³Ì³ï¿½Ê¼ï¿½ï¿½
+		eventfds.push_back(fds[1]);//¹¤×÷Ïß³Ì³õÊ¼»¯
 		event.push_back(ev);
 		
-		auto one_worker=std::make_unique<hodis::workthread>(fds[0],i, (*worker_item_aq)[i], (*worker_item_aq_condition)[i] );//ï¿½ï¿½ï¿½ï¿½ï¿½ß³Ì²ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
-		work_thread_group.push_back(std::move(one_worker))ï¿½ï¿½
+		auto one_worker=std::make_unique<hodis::workthread>(fds[0],i, (*worker_item_aq)[i], (*worker_item_aq_condition)[i] );//´´½¨Ïß³Ì²¢³õÊ¼»¯
+		work_thread_group.push_back(std::move(one_worker))£»
 	}
 }
 
@@ -140,11 +140,11 @@ void dataserver::run()
 			revents=events[i].events;
 			if(revents & (EPOLLERR | EPOLLHUP))
 			{
-				std::cout<<"ï¿½Õµï¿½ RST ï¿½ï¿½ï¿½ï¿½"<<std::endl;
+				std::cout<<"ÊÕµ½ RST ±¨ÎÄ"<<std::endl;
 			}
 			if(events[i].data.fd == listen_fd)
 			{
-				std::cout<<"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"<<std::endl;
+				std::cout<<"¼ÓÈëÁ¬½Ó"<<std::endl;
 				int con_fd=accept_connect();
 				if(con_fd == -1)
 				{
@@ -158,7 +158,7 @@ void dataserver::run()
 			}
 			else
 			{
-				std::cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << std::endl;
+				std::cout << "ÌØÊâÇé¿ö" << std::endl;
 			}
 		}
 	}
@@ -183,7 +183,7 @@ int accept_connect()
     }
 }
 
-bool register_worker(int fd)//×¢ï¿½ï¿½ï¿½ß³ï¿½ï¿½Â¼ï¿½
+bool register_worker(int fd)//×¢²áÏß³ÌÊÂ¼þ
 {
 	Item item;
 	int index=counter.load()%thread_num;

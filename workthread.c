@@ -9,7 +9,7 @@ namespace hodis{
 		item_aq=_item_aq;
 		item_aq_condition=_item_aq_condition;
 		workinit();
-		worker = std::make_unique<std::thread>(&workthread::run, std::ref(*this));//创建线程
+		worker = std::make_unique<std::thread>(&workthread::run, std::ref(*this));//创建线程启动
         std::cout << "worker create success!" << std::endl;
 	}
 	

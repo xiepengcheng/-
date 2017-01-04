@@ -33,8 +33,7 @@ class dataserver
 	using ParaMap = std::map<std::string, std::string>;
     using WorkerThreadGroup = std::vector<std::unique_ptr<hodis::workthread>>;
     using WorkerItemAQ = std::unique_ptr<std::vector<std::shared_ptr<hodis::lockList<Item>>>>;
-    using WorkerAQCondition = std::unique_ptr<std::vector<std::shared_ptr<
-            std::atomic<bool>>>>;
+    using WorkerAQCondition = std::unique_ptr<std::vector<std::shared_ptr<std::atomic<bool>>>>;
     using WorkerEvent = std::vector<uint64_t>;
     using WorkerEventFd = std::vector<int>;
 	
