@@ -9,10 +9,21 @@ namespace hodis{
 		item_aq=_item_aq;
 		item_aq_condition=_item_aq_condition;
 		workinit();
-		worker = std::make_unique<std::thread>(&workthread::run, std::ref(*this));//创建线程启动
+		//worker = std::make_unique<std::thread>(&workthread::run, std::ref(*this));//创建线程启动
+		
+		worker = std::make_unique<pthread_t>( create_worker(&workthread::run) );
         std::cout << "worker create success!" << std::endl;
 	}
-	
+	pthread_t create_worker( void* (*fun)(void ) )
+	{
+		pthread_t thread;
+		if(pthread_create(&thread, NULL, fun, NULL) !=0 )
+		{
+			fprintf(stderr,"pthread_create error\n");
+			exit(1);
+		}
+		return thread;
+	}
 	workthread::~workthread(){}
 	
 	bool workinit()

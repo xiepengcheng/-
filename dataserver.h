@@ -22,6 +22,8 @@
 #include <map>
 #include <list>
 
+#include "workthread.h"
+
 #define Max_conn 10000
 #define BackLog  1024
 
