@@ -8,25 +8,14 @@ namespace hodis{
 		id=_id;
 		item_aq=_item_aq;
 		item_aq_condition=_item_aq_condition;
-		workinit();
-		//worker = std::make_unique<std::thread>(&workthread::run, std::ref(*this));//创建线程启动
-		
-		worker = std::make_unique<pthread_t>( create_worker(&workthread::run) );
+		work_init();
+		worker = std::make_unique<std::thread>(&workthread::run, std::ref(*this));//创建线程启动		
         std::cout << "worker create success!" << std::endl;
 	}
-	pthread_t create_worker( void* (*fun)(void ) )
-	{
-		pthread_t thread;
-		if(pthread_create(&thread, NULL, fun, NULL) !=0 )
-		{
-			fprintf(stderr,"pthread_create error\n");
-			exit(1);
-		}
-		return thread;
-	}
+	
 	workthread::~workthread(){}
 	
-	bool workinit()
+	bool workthread::work_init()
 	{
 		bool ret=true;
 		struct epoll_event ev;
@@ -63,7 +52,7 @@ namespace hodis{
 			{
 				if(events[i].data.fd == notify_receive_fd)
 				{
-					std::cout<<"主线程事件"<<std::endl;
+					std::cout<<"主线程发送过来的事件"<<std::endl;
 					std::cout << "id:" << id << std::endl;
 					handle_register_event();
 				}
@@ -90,7 +79,7 @@ namespace hodis{
 		struct epoll_event ev;
 		read(notify_receive_fd, &u, sizeof(uint64_t));
 		printf("event:%ld\n", u);
-		while(!item_aq.empty())
+		while(!item_aq->empty())
 		{
 			if(++accumulator==5)
 				break;

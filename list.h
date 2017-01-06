@@ -14,7 +14,7 @@ class lockList
 	~lockList();
 	
 	size_t getSize();
-	void putConnection(T t);
+	void putConnect(T t);
 	T& getConnect();
 	bool empty();
 	

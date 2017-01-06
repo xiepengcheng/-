@@ -42,7 +42,7 @@ bool dataserver::analyse_parameter(std::ifstream &in, std::map<std::string, std:
     thread_num = atoi(para["work_thread_num"].c_str());
 }
 
-bool dataserver::master_init(std::map<std::string, std::string>& para)//Ö÷Òª¹¤×÷³õÊ¼»¯
+bool dataserver::master_init(std::map<std::string, std::string>& para)//ä¸»è¦å·¥ä½œåˆå§‹åŒ–
 {
 	
 	worker_item_aq = std::make_unique<std::vector<std::shared_ptr<hodis::lockList<Item>>>>(thread_num);
@@ -118,11 +118,11 @@ bool dataserver::work_init()
 		{
 			fprintf(stderr,"pipe fds error\n");
 		}
-		eventfds.push_back(fds[1]);//¹¤×÷Ïß³Ì³õÊ¼»¯
+		eventfds.push_back(fds[1]);//å·¥ä½œçº¿ç¨‹åˆå§‹åŒ–
 		event.push_back(ev);
 		
-		auto one_worker=std::make_unique<hodis::workthread>(fds[0],i, (*worker_item_aq)[i], (*worker_item_aq_condition)[i] );//´´½¨Ïß³Ì²¢³õÊ¼»¯
-		work_thread_group.push_back(std::move(one_worker))£»
+		auto one_worker=std::make_unique<hodis::workthread>(fds[0],i, (*worker_item_aq)[i], (*worker_item_aq_condition)[i] );//åˆ›å»ºçº¿ç¨‹å¹¶åˆå§‹åŒ–
+		work_thread_group.push_back(std::move(one_worker));
 	}
 }
 
@@ -143,11 +143,11 @@ void dataserver::run()
 			revents=events[i].events;
 			if(revents & (EPOLLERR | EPOLLHUP))
 			{
-				std::cout<<"ÊÕµ½ RST ±¨ÎÄ"<<std::endl;
+				std::cout<<"æ”¶åˆ° RST æŠ¥æ–‡"<<std::endl;
 			}
 			if(events[i].data.fd == listen_fd)
 			{
-				std::cout<<"¼ÓÈëÁ¬½Ó"<<std::endl;
+				std::cout<<"æ–°åŠ å…¥è¿æ¥"<<std::endl;
 				int con_fd=accept_connect();
 				if(con_fd == -1)
 				{
@@ -161,13 +161,13 @@ void dataserver::run()
 			}
 			else
 			{
-				std::cout << "ÌØÊâÇé¿ö" << std::endl;
+				std::cout << "ç‰¹æ®Šæƒ…å†µ" << std::endl;
 			}
 		}
 	}
 }
 
-int accept_connect()
+int dataserver::accept_connect()
 {
 	struct sockaddr_in client_addr;
     socklen_t addrlen = sizeof(struct sockaddr_in);
@@ -186,7 +186,7 @@ int accept_connect()
     }
 }
 
-bool register_worker(int fd)//×¢²áÏß³ÌÊÂ¼ş
+bool dataserver::register_worker(int fd)//æ³¨å†Œçº¿ç¨‹äº‹ä»¶
 {
 	Item item;
 	int index=counter.load()%thread_num;
@@ -194,7 +194,7 @@ bool register_worker(int fd)//×¢²áÏß³ÌÊÂ¼ş
 	
 	++counter;
 	item.fd=fd;
-	std::cout<<"join ...fd"<<item.fd<<std::endl;
+	std::cout<<"join ...fd: "<<item.fd<<std::endl;
 	((*worker_item_aq)[index])->putConnect(item);
 	++event[index];
 	if(size != write(eventfds[index], &event[index], size))
