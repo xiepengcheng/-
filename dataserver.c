@@ -1,4 +1,6 @@
 #include "dataserver.h"
+
+
 namespace hodis{
 	
 dataserver::dataserver(std::ifstream& in)
@@ -42,6 +44,7 @@ bool dataserver::analyse_parameter(std::ifstream &in, std::map<std::string, std:
 
 bool dataserver::master_init(std::map<std::string, std::string>& para)//主要工作初始化
 {
+	
 	worker_item_aq = std::make_unique<std::vector<std::shared_ptr<hodis::lockList<Item>>>>(thread_num);
     worker_item_aq_condition = std::make_unique<std::vector<std::shared_ptr<std::atomic<bool>>>>(thread_num);
     /* worker thread accept connection item queue init */
@@ -85,7 +88,7 @@ bool dataserver::event_init()
 		exit(1);
 	}
 	ev.events=EPOLLIN | EPOLLET;
-	ev.data,fd=listen_fd;
+	ev.data.fd=listen_fd;
 	if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD,listen_fd,&ev) == -1)
 	{
 		fprintf(stderr,"epoll_ctl() error");

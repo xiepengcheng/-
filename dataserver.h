@@ -23,7 +23,7 @@
 #include <list>
 
 #include "workthread.h"
-
+#include "list.h"
 #define Max_conn 10000
 #define BackLog  1024
 
@@ -39,7 +39,7 @@ class dataserver
     using WorkerEvent = std::vector<uint64_t>;
     using WorkerEventFd = std::vector<int>;
 	
-	using ParaMap = std::map<std::string, std::string>;
+	
 	dataserver() = delete;
 	dataserver(std::ifstream &in);
 	~dataserver();
@@ -59,6 +59,13 @@ class dataserver
 	WorkerThreadGroup work_thread_group;
 	WorkerEvent event;
     WorkerEventFd eventfds;
+	
+	/* worker thread accept connection item queue */
+    WorkerItemAQ worker_item_aq;
+    /* false insert first queue, true insert second queue */
+    WorkerAQCondition worker_item_aq_condition;
+    /* distrubute event to worker thread by counter */
+    std::atomic<uint_fast64_t> counter;
 	
 	int port;
 	std::string ip;
