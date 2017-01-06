@@ -121,7 +121,7 @@ bool dataserver::work_init()
 		eventfds.push_back(fds[1]);//工作线程初始化
 		event.push_back(ev);
 		
-		auto one_worker=std::make_unique<hodis::workthread>(fds[0],i, (*worker_item_aq)[i], (*worker_item_aq_condition)[i] );//创建线程并初始化
+		auto one_worker=std::make_unique<hodis::workthread>(fds[0], i, (*worker_item_aq)[i], (*worker_item_aq_condition)[i] );//创建线程并初始化
 		work_thread_group.push_back(std::move(one_worker));
 	}
 }
@@ -197,7 +197,8 @@ bool dataserver::register_worker(int fd)//注册线程事件
 	std::cout<<"join ...fd: "<<item.fd<<std::endl;
 	((*worker_item_aq)[index])->putConnect(item);
 	++event[index];
-	if(size != write(eventfds[index], &event[index], size))
+	
+	if(size != write(eventfds[index], &event[index], size))//通知工作线程有新的连接加入
 	{
 		fprintf(stderr,"write error\n");
 		return false;

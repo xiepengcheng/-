@@ -53,7 +53,7 @@ namespace hodis{
 				if(events[i].data.fd == notify_receive_fd)
 				{
 					std::cout<<"主线程发送过来的事件"<<std::endl;
-					std::cout << "id:" << id << std::endl;
+					std::cout << "线程id: " << id << std::endl;
 					handle_register_event();
 				}
 				else if(events[i].events & EPOLLIN)
@@ -86,7 +86,7 @@ namespace hodis{
 			auto &t=item_aq->getConnect();
 			ev.data.fd=t.fd;
 			ev.events=EPOLLIN | EPOLLET;
-			if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD, t.fd, &ev)== -1)
+			if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD, t.fd, &ev)== -1)//注册监听事件
 			{
 				fprintf(stderr, "epoll_ctl error\n");
 				return false;
